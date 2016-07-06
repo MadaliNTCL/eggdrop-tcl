@@ -31,8 +31,6 @@ Seen ...  </h4>
     <td>Sends a notice to the backchannel, to alert everyone in there that someone<br> somewhere needs your help, and why (if specified)</td>
   </tr>
 </table>
-<br>
-<br>
 <a name="installation"><h2>Installation</h2></a>
 To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/chancontrol.tcl</b> to the bottom of your eggdrop.conf:<p>
 It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
