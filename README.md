@@ -4,12 +4,11 @@
 <ul>
 <li><a href="#description">Description</a>
 <li><a href="#commands">Commands</a>
-<li><a href="#faq">FAQ</a>
 <li><a href="#contact">Contact</a>
-<li><a href="#disclaimer">DISCLAIMER</a>
 </ul>
 <br>
 <br>
+
 <a name="description"><h2>Description</h2></a>
 This bot has protection scripts enabled by default when oped in a channel. <br>
 If you want some specific users "protected" from those, add them +f with .chattr<br>
@@ -205,35 +204,6 @@ To install this script you have to copy it to your /scripts/ directory and add <
 It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
 For example, Bot1 manages the channel's userlist and day to day operations, Bot2 is for games, Bot3 is for public triggers<p>
 Then you can learn how to link them into a botnet to be more effective. Having a bot or 2 on a separate server is also a good idea<p>
-<br>
-<br>
-<a name="faq"><h2>Top 3 questions i get.</h2></a>
-<table "id="faq">
-	<tr>
-		<td valign="top">Q:</td>
-		<td valign="top"><b>I have a suggestion for your bot, i made an edit, there is a typo..</b></td>
-	</tr>
-	<tr>
-		<td valign="top">A:</td>
-		<td valign="top">Feel free to contact the author at seblemery[remove]@[remove]gmail.com!</td>
-	</tr>
-	<tr>
-		<td valign="top">Q:</td>
-		<td valign="top"><b>My bot does not want to start, what do i do?</b></td>
-	</tr>
-	<tr>
-		<td valign="top">A:</td>
-		<td valign="top">Start by unloading every scripts, and then load them one by one, or see a #eggdrop channel for help.</td>
-	</tr>
-	<tr>
-		<td valign="top">Q:</td>
-		<td valign="top"><b>Do you lend your bot to other people? I don't have anywhere to host my own.</b></td>
-	</tr>
-	<tr>
-		<td valign="top">A:</td>
-		<td valign="top">If you are on UnderNET, join #chancontrol and type !request, then be patient.</td>
-	</tr>
-</table>
 <br>
 <br>
 <a name="contact"><h2>Contact</h2></a>
