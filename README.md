@@ -1,5 +1,5 @@
 <html>
-<title>seen.tcl help file - PLEASE, keep in mind, this is a work in progess</title>
+<title><b><i>PLEASE, keep in mind, this is a work in progess</b></i></title>
 <h2>Index</h2>
 <ul>
 <li><a href="#description">Description</a>
