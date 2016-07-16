@@ -8,34 +8,32 @@
 </ul>
 
 <a name="description">
-<h2>Description</h2></a>Seen ...  </h4>
+<h2>Description</h2></a>You dont have to worry anymore when it comes to who joined your channel. Now you can see exactly who joined/quited/part/kick/ban on your channel in 1 easy step '!seen nickname', you can now know even if you were being looked.</h4>
 <br>
 <br>
 <a name="commands"><h2>Commands</h2></a>
 <table "id="t01"> 
-<caption><h3>DCC/telnet commands (you need a handle(user) on the bot)</h3></caption>
+<caption><h3>MSG/Public commands (you need a handle (user) on the bot)</h3></caption>
   <tr>
-    <th><b>.command</b></th>
+    <th><b>Commands</b></th>
     <th><b>Description</b></th>
   </tr>
   <tr>
-    <td>.keepalive</td>
-    <td>Send a blank line to the bot to help you keep the connection in DCC<br>Really useful when your home connection sucks</td>
+    <td>!seen <nickname></td>
+    <td>Main command to look for someone if he joined your channel</td>
   </tr>
   <tr>
-    <td>.help</td>
-    <td>To be completed<br>help system, with examples</td>
+    <td>!seen stats</td>
+    <td>It will display seen statistics like (channel monitorised and user recorded)</td>
   </tr>
   <tr>
-    <td>.ops <text></td>
-    <td>Sends a notice to the backchannel, to alert everyone in there that someone<br> somewhere needs your help, and why (if specified)</td>
+    <td>!seen top</td>
+    <td>Will display the list of the most looked for nicknames</td>
   </tr>
 </table>
 <a name="installation"><h2>Installation</h2></a>
-To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/chancontrol.tcl</b> to the bottom of your eggdrop.conf:<p>
+To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/seen.tcl</b> to the bottom of your eggdrop.conf:<p>
 It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
-For example, Bot1 manages the channel's userlist and day to day operations, Bot2 is for games, Bot3 is for public triggers<p>
-Then you can learn how to link them into a botnet to be more effective. Having a bot or 2 on a separate server is also a good idea<p>
 
 <a name="contact"><h2>Contact</h2></a>
 You can contact me via E-Mail at <a href="mailto:madalinmen28@gmail.com">madalinmen28@gmail.com</a><br>or find me on IRC (networks: QuakeNET/UnderNET/EfNET channel: #EggdropTCL).
