@@ -32,11 +32,12 @@
   </tr>
 </table>
 <a name="installation"><h2>Installation</h2></a>
-To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/seen.tcl</b> to the bottom of your eggdrop.conf:<p>
-It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
+To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/seen.tcl</b> to the bottom of your eggdrop.conf. It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
 
 <a name="contact"><h2>Contact</h2></a>
-You can contact me via E-Mail at <a href="mailto:madalinmen28@gmail.com">madalinmen28@gmail.com</a><br>or find me on IRC (networks: QuakeNET/UnderNET/EfNET channel: #EggdropTCL).
+You can contact me via E-Mail at <a href="mailto:madalinmen28@gmail.com">madalinmen28@gmail.com</a>
+Also you can find me on almost any IRC NETWORK (known) on channel #EggdropTCL using nickname _MaDaLiN_, if you find a network that in not on try a network like UnderNET/QuakeNET.
+<br>NOTE: If you find only EggdropTCL as bot on the channel join you can say something i will answer when i will be back (whenever you see EggdropTCL eggdrop it means that network is linked and i can see everything there)
 
 <a name="disclaimer"><h2>DISCLAIMER</h2></a>
 seen.tcl is provided 'as is' and without warranty of any kind.
