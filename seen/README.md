@@ -36,8 +36,21 @@ To install this script you have to copy it to your /scripts/ directory and add <
 
 <a name="contact"><h2>Contact</h2></a>
 You can contact me via E-Mail at <a href="mailto:madalinmen28@gmail.com">madalinmen28@gmail.com</a>
-Also you can find me on almost any IRC NETWORK (known) on channel #EggdropTCL using nickname _MaDaLiN_, if you find a network that in not on try a network like UnderNET/QuakeNET.
-<br>NOTE: If you find only EggdropTCL as bot on the channel join you can say something i will answer when i will be back (whenever you see EggdropTCL eggdrop it means that network is linked and i can see everything there)
+<table "id="t01"> 
+<caption><h3>IRC Networks</h3></caption>
+  <tr>
+    <th><b>Name</b></th>
+    <th><b>Channel</b></th>
+    <th><b>Nickname</b></th>    
+  </tr>
+  <tr>
+    <tr>
+    <td>FreeNODE - DalNET - IrcNET - NextIRC - UnderNET - EfNET - QuakeNET</td>
+    <td>#EggdropTCL</td>
+    <td>_MaDaLiN_ - EggdropTCL</td>
+  </tr>
+  </table>
+
 
 <a name="disclaimer"><h2>DISCLAIMER</h2></a>
 seen.tcl is provided 'as is' and without warranty of any kind.
