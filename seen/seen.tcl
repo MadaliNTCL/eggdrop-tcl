@@ -19,6 +19,19 @@
 # |                    Skype Messenger     : madalinmen28                               |
 # |                                                                                     |
 # +-------------------------------------------------------------------------------------+
+# + *** Commands ***                                                                    |
+# |     +---------------+                                                               |
+# |     [ USER - PUBLIC]                                                                |
+# |     +---------------+                                                               |
+# |                                                                                     |
+# |     +++ !seen <nickname>                                                            |
+# |     +++ !seen top                                                                   |
+# |     +++ !seen stats                                                                 |
+# +-------------------------------------------------------------------------------------+
+# | IMPORTANT:                                                                          |
+# |                                                                                     |
+# | There is no need for script activation                                              | 
+# +-------------------------------------------------------------------------------------+
 
 bind PUB - !seen seen:pub
 
@@ -170,7 +183,7 @@ proc seen {cmd value chan nick} {
 				}
 			}
 
-			if {[info exists reply]} {  putquick "PRIVMSG $chan :$reply" }
+			if {[info exists reply]} {  putserv "NOTICE $nick :$reply" }
 
 			close $in
 
