@@ -432,7 +432,7 @@ proc seen:check {nick uhost hand chan} {
 			set times [lindex [split $line] 4]
 			set seened [lindex [split $line] 5]
 
-			putserv "NOTICE $nick :\00304$nick\003 looked for you with \00303!seen\003 on \00312$chan\003 about \00306[duration [expr [unixtime] - [lindex [split $line] 2]]]\003 ago (\00307$date\003). You have been searched so far \00304\002$times\003\002 times."
+			putserv "NOTICE [lindex [split $line] 0] :\00304$nick\003 looked for you with \00303!seen\003 on \00312$chan\003 about \00306[duration [expr [unixtime] - [lindex [split $line] 2]]]\003 ago (\00307$date\003). You have been searched so far \00304\002$times\003\002 times."
 
 			puts $b "$target $chan [lindex [split $line] 2] $nick $times 1"
 		} else { puts $b $line }
