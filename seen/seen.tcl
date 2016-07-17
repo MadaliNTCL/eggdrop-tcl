@@ -180,6 +180,8 @@ proc seen {cmd value chan nick} {
 			close $in
 		}
 		"default" {
+			if {[onchan $value $chan]} { putserv "PRIVMSG $chan :$value is already on $chan"; return}
+			
 			unset -nocomplain found
 
 			set in [open "netbots/database/seen/seen" r]
@@ -188,7 +190,7 @@ proc seen {cmd value chan nick} {
 				if {[string match -nocase [lindex [split $line] 1] $chan]} {
 					if {[string match -nocase [lindex [split $line] 2] $value]} {
 						set found 1
-						putlog "gasit ca nickname"
+
 						set host [string trim [lindex [split $line] 3] "*!~"]
 						set date [clock format [lindex [split $line] 4] -format "%d.%m.%Y / %R-%p"]
 						set output [duration [expr [unixtime] - [lindex [split $line] 4]]]
