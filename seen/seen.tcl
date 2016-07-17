@@ -64,13 +64,23 @@ proc seen:pub {nick uhost hand chan arg} {
 	switch -exact -- [lindex [split $arg] 0] {
 		stats { seen stats $value $chan $nick }
 		top { seen top $value $chan $nick } 
+		reset { seen reset $value $chan $hand } 
 		default { seen search $value $chan $nick }
 	}
 }
 
 proc seen {cmd value chan nick} {
-
+	global seen-path
+	
 	switch -exact -- $cmd {
+		"reset" {
+			if {![matchattr $nick n]} { return }
+			
+			set a [open ${seen-path}/seen w]; close $a
+			set b [open ${seen-path}/seen.check w]; close $b
+			
+			putserv "NOTICE $nick :Am sters cu succes baza de date"
+		}
 		"top" {
 			set temp(display) ""; set temp(say) ""; set temp(announce) ""
 			array set times "";
@@ -129,14 +139,42 @@ proc seen {cmd value chan nick} {
 					if {[string match -nocase [lindex [split $host @] 1] [lindex [split $value @] 1]]} {
 						set found 1
 
+						set host [string trim [lindex [split $line] 3] "*!~"]
+						set date [clock format [lindex [split $line] 4] -format "%d.%m.%Y / %R-%p"]
+						set output [duration [expr [unixtime] - [lindex [split $line] 4]]]
+						set reason [lrange [split $line] 6 end]
+
 						lappend temp(list) [lindex [split $line] 2]
 
-						set temp(list2) "[join $temp(list) ", "] ([lindex [split $line] 3]) joined $chan about \00304[duration [expr [unixtime] - [lindex [split $line] 4]]]"
+						if {[lindex [split $line] 5] eq "0"} {
+							set staymsg "I dont know how much he stayed."
+						} else { set staymsg "after he stayed \00303[duration [lindex [split $line] 5]]\003 on $chan."}
+
+						if {[lindex [split $line] 0] eq "PART"} {
+							set reply "\00312[lindex [split $line] 2]\003 (\00304\00304$host\003\003) left \00302$chan\003 about \00306$output\003 (\00307$date\003) stating: \037\037$reason\037\037, $staymsg"
+						}
+						if {[lindex [split $line] 0] eq "SIGN"} {
+							set reply "\00312[lindex [split $line] 2]\003 (\00304$host\003) left IRC about \00306$output\003 (\00307$date\003) stating: \037$reason\037, $staymsg"
+						}
+						if {[lindex [split $line] 0] eq "JOIN"} {
+							if {[onchan $value $chan]} { set nowon "$value is stil here."} else { set nowon "I dont see $value on $chan" }
+							set reply "\00312[lindex [split $line] 2]\003 (\00304$host\003) joined $chan about \00306$output\003 (\00307$date\003). $nowon"
+						}
+						if {[lindex [split $line] 0] eq "SPLIT"} {
+							set reply "\00312[lindex [split $line] 2]\003 (\00304$host\003) left in *.net *.split about \00306$output\003 (\00307$date\003), $staymsg"
+						}
+						if {[lindex [split $line] 0] eq "KICK"} {
+							set reply "\00312[lindex [split $line] 2]\003 (\00304$host\003) was kicked on $chan about \00306$output\003 (\00307$date\003) with the reason (\037$reason\037), $staymsg"
+						}
+						if {[lindex [split $line] 0] eq "NICKCHANGE"} {
+							if {[onchan $value $chan]} { set nowon "\00312$value\003 is stil here." } else { set nowon "I dont see $value on $chan" }
+							set reply "\00312[lindex [split $line] 2]\003 (\00304$host\003) changed his NICK in \00304[lindex [split $line] 6]\003 about \00306$output\003 (\00307$date\003). $nowon"
+						}
 					}
 				}
 			}
 
-			if {[info exists temp(list2)]} {  putquick "PRIVMSG $chan :$temp(list2)" }
+			if {[info exists reply]} {  putserv "NOTICE $nick :$reply" }
 			if {![info exists found]} { putquick "NOTICE $nick :I dont remember $value." }
 
 			close $in
@@ -150,6 +188,7 @@ proc seen {cmd value chan nick} {
 				if {[string match -nocase [lindex [split $line] 1] $chan]} {
 					if {[string match -nocase [lindex [split $line] 2] $value]} {
 						set found 1
+						putlog "gasit ca nickname"
 						set host [string trim [lindex [split $line] 3] "*!~"]
 						set date [clock format [lindex [split $line] 4] -format "%d.%m.%Y / %R-%p"]
 						set output [duration [expr [unixtime] - [lindex [split $line] 4]]]
@@ -184,7 +223,8 @@ proc seen {cmd value chan nick} {
 			}
 
 			if {[info exists reply]} {  putserv "NOTICE $nick :$reply" }
-
+			if {![info exists found]} { seen hostname $value $chan $nick; return }
+			
 			close $in
 
 			set a [open "netbots/database/seen/seen.check" r]
@@ -207,7 +247,6 @@ proc seen {cmd value chan nick} {
 			}
 
 			if {![info exists checked]} { puts $b "$value $chan [unixtime] $nick 1 0" }
-			if {![info exists found]} { seen hostname $value $chan $nick }
 
 			close $a; close $b
 
@@ -393,7 +432,7 @@ proc seen:check {nick uhost hand chan} {
 			set times [lindex [split $line] 4]
 			set seened [lindex [split $line] 5]
 
-			putserv "PRIVMSG $chan :\00304$nick\003 looked for you with \00303!seen\003 on \00312$chan\003 about \00306[duration [expr [unixtime] - [lindex [split $line] 2]]]\003 ago (\00307$date\003). You have been searched so far \00304\002$times\003\002 times."
+			putserv "NOTICE $nick :\00304$nick\003 looked for you with \00303!seen\003 on \00312$chan\003 about \00306[duration [expr [unixtime] - [lindex [split $line] 2]]]\003 ago (\00307$date\003). You have been searched so far \00304\002$times\003\002 times."
 
 			puts $b "$target $chan [lindex [split $line] 2] $nick $times 1"
 		} else { puts $b $line }
