@@ -186,7 +186,7 @@ proc seen {cmd value chan nick} {
 			close $in
 		}
 		"default" {
-			if {[onchan $value $chan]} { putserv "PRIVMSG $chan :$value is already on $chan"; return}
+			if {[onchan $value $chan]} { putserv "NOTICE $nick :$value is already on $chan"; return}
 			
 			unset -nocomplain found
 
