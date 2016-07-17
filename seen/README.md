@@ -30,6 +30,10 @@
     <td>!seen top</td>
     <td>Will display the list of the most looked for nicknames</td>
   </tr>
+    <tr>
+    <td>!seen reset</td>
+    <td>RESETs top and seen statistics (works only for admins)</td>
+  </tr>
 </table>
 <a name="installation"><h2>Installation</h2></a>
 To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/seen.tcl</b> to the bottom of your eggdrop.conf. It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
