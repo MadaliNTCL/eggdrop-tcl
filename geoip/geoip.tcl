@@ -252,4 +252,4 @@ proc geoip:save {} {
 
 catch {source geoip}
 
-putlog "++ Succesfully loaded: \00312GEOIp Location"
+putlog "Succesfully loaded: \00303GEOIp TCL Script"
