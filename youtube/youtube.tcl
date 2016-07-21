@@ -19,11 +19,17 @@
 # |                    Skype Messenger     : madalinmen28                               |
 # |                                                                                     |
 # +-------------------------------------------------------------------------------------+
+# + *** Commands ***                                                                    |
+# |     +---------------+                                                               |
+# |     [ OP - PUBLIC]                                                                  |
+# |     +---------------+                                                               |
+# |                                                                                     |
+# |     +++ !weather on                                                                 |
+# |     +++ !weather off                                                                |
+# |                                                                                     |
 # | IMPORTANT:                                                                          |
 # |                                                                                     |
-# | There is no need for script activation                                              | 
-# | Its active on every channel                                                         |
-# | Command can be used once 10 seconds for each user                                   |
+# | 500 requets per day                                                                 | 
 # +-------------------------------------------------------------------------------------+
 
 bind PUBM - * youtube
@@ -32,11 +38,31 @@ package require json
 package require http
 package require tls
 
-set youtube(api) ""
+set youtube(api) "AIzaSyDxNwsjQz_ESuj2D8TnREIKvkTarPGlyaA"
+
+setudef flag youtube
 
 proc youtube {nick uhost hand chan arg} {
 	global ytignore youtube
 
+	switch -exact -- [lindex [split $arg] 0] {
+		on {
+			if {[isop $nick $chan]} {
+				channel set $chan +youtube
+				
+				putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306+youtube\0032 on \00304$chan"
+			}
+		}
+		off {
+			if {[isop $nick $chan]} {
+				channel set $chan -youtube
+				
+				putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306-youtube\0032 on \00304$chan"
+			}
+		}		
+	}
+
+	if {![channel get $chan youtube]} { return }	
 	if {![string match -nocase *yout* $arg]} { return 0 }
 
 	## ++
