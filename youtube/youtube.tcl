@@ -45,7 +45,7 @@ setudef flag youtube
 proc youtube {nick uhost hand chan arg} {
 	global ytignore youtube
 
-	switch -exact -- [lindex [split $arg] 0] {
+	switch -exact -- [lindex [split $arg] 1] {
 		on {
 			if {[isop $nick $chan]} {
 				channel set $chan +youtube
