@@ -19,11 +19,11 @@
     <th><b>Description</b></th>
   </tr>
   <tr>
-    <td>!w on</td>
+    <td>link on</td>
     <td>Activates the script on channel</td>
   </tr>
   <tr>
-    <td>!w off</td>
+    <td>link off</td>
     <td>Deactivates the script on channel</td>
   </tr>
 </table>
