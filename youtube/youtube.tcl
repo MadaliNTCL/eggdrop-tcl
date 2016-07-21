@@ -34,6 +34,7 @@
 # +-------------------------------------------------------------------------------------+
 
 bind PUBM - * youtube
+bind PUBM - * youtube:pubm
 
 package require json
 package require http
@@ -43,10 +44,24 @@ set youtube(api) ""
 
 setudef flag youtube
 
-proc youtube {nick uhost hand chan arg} {
-	global ytignore youtube
+proc youtube:pubm {nick uhost hand chan arg} {
+	global temp
 
-	switch -exact -- [lindex [split $arg] 1] {
+	if {[string index $arg 0] in {! . `}} {
+		set temp(cmd) [string range $arg 1 end]
+		set temp(cmd) [lindex [split $temp(cmd)] 0]
+		set arg [join [lrange [split $arg] 1 end]]
+	} elseif {[isbotnick [lindex [split $arg] 0]]} {
+		set temp(cmd) [lindex [split $arg] 1]
+		set arg [join [lrange [split $arg] 2 end]]
+	} else { return 0 }
+
+	if {[info commands ytpubm:$temp(cmd)] ne ""} { ytpubm:$temp(cmd) $nick $uhost $hand $chan $arg }
+}
+
+proc ytpubm:youtube {nick uhost hand chan arg} {
+
+	switch -exact -- [lindex [split $arg] 0] {
 		on {
 			if {[isop $nick $chan]} {
 				channel set $chan +youtube
@@ -62,8 +77,11 @@ proc youtube {nick uhost hand chan arg} {
 			}
 		}		
 	}
+}
+proc youtube {nick uhost hand chan arg} {
+	global ytignore youtube
 
-	if {![channel get $chan youtube]} { return }	
+	if {![channel get $chan youtube]} { return 0 }	
 	if {![string match -nocase *yout* $arg]} { return 0 }
 
 	## ++
