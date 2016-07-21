@@ -30,6 +30,7 @@
 # | IMPORTANT:                                                                          |
 # |                                                                                     |
 # | 500 requets per day                                                                 | 
+# | You need Google Api Key                                                             |
 # +-------------------------------------------------------------------------------------+
 
 bind PUBM - * youtube
@@ -38,7 +39,7 @@ package require json
 package require http
 package require tls
 
-set youtube(api) "AIzaSyDxNwsjQz_ESuj2D8TnREIKvkTarPGlyaA"
+set youtube(api) ""
 
 setudef flag youtube
 
