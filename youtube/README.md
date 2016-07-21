@@ -3,13 +3,30 @@
 <h2>Index</h2>
 <ul>
 <li><a href="#description">Description</a>
+<li><a href="#commands">Commands</a>
+<li><a href="#contact">Contact</a>
 </ul>
 
 <a name="description">
 <h2>Description</h2></a>Provides informations about YouTUBE links such as Views, Likes, Dislikes, Comments etc</h4>
 <br>
 <br>
-
+<a name="commands"><h2>Commands</h2></a>
+<table "id="t01"> 
+<caption><h3>MSG/Public commands (you need a handle (user) on the bot)</h3></caption>
+  <tr>
+    <th><b>Commands</b></th>
+    <th><b>Description</b></th>
+  </tr>
+  <tr>
+    <td>!w on</td>
+    <td>Activates the script on channel</td>
+  </tr>
+  <tr>
+    <td>!w off</td>
+    <td>Deactivates the script on channel</td>
+  </tr>
+</table>
 <a name="installation"><h2>Installation</h2></a>
 To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/youtube.tcl</b> to the bottom of your eggdrop.conf. It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
 
