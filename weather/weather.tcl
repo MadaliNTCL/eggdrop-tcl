@@ -39,7 +39,7 @@ package require json
 package require http
 package require tdom
 
-set weather(api) "5b7f8d8a2bf54ac1865153523162007"
+set weather(api) ""
 
 setudef flag weather
 
