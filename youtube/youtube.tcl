@@ -24,8 +24,8 @@
 # |     [ OP - PUBLIC]                                                                  |
 # |     +---------------+                                                               |
 # |                                                                                     |
-# |     +++ !weather on                                                                 |
-# |     +++ !weather off                                                                |
+# |     +++ !youtube on                                                                 |
+# |     +++ !youtube off                                                                |
 # |                                                                                     |
 # | IMPORTANT:                                                                          |
 # |                                                                                     |
