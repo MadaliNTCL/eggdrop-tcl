@@ -29,7 +29,8 @@
 # |                                                                                     |
 # | IMPORTANT:                                                                          |
 # |                                                                                     |
-# | 500 requets per day                                                                 | 
+# | 500 requets per day                                                                 |
+# | You need www.worldweatheronline.com Api Key                                         |
 # +-------------------------------------------------------------------------------------+
 
 bind PUB - !w weather
