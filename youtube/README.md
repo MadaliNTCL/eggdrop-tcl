@@ -11,7 +11,7 @@
 <br>
 
 <a name="installation"><h2>Installation</h2></a>
-To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/seen.tcl</b> to the bottom of your eggdrop.conf. It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
+To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/youtube.tcl</b> to the bottom of your eggdrop.conf. It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
 
 <a name="contact"><h2>Contact</h2></a>
 You can contact me via E-Mail at <a href="mailto:madalinmen28@gmail.com">madalinmen28@gmail.com</a>
@@ -32,7 +32,7 @@ You can contact me via E-Mail at <a href="mailto:madalinmen28@gmail.com">madalin
 
 
 <a name="disclaimer"><h2>DISCLAIMER</h2></a>
-seen.tcl is provided 'as is' and without warranty of any kind.
+youtube.tcl is provided 'as is' and without warranty of any kind.
 <br>
 <br>
 <hr align="CENTER" width="50%">
