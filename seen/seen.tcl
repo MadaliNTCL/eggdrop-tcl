@@ -21,18 +21,12 @@
 # +-------------------------------------------------------------------------------------+
 # + *** Commands ***                                                                    |
 # |     +---------------+                                                               |
-# |     [ User - PUBLIC]                                                                |
+# |     [ USER - PUBLIC]                                                                |
 # |     +---------------+                                                               |
 # |                                                                                     |
 # |     +++ !seen <nickname>                                                            |
 # |     +++ !seen top                                                                   |
 # |     +++ !seen stats                                                                 |
-# |                                                                                     |
-# |     +---------------+                                                               |
-# |     [ Admin - PUBLIC]                                                               |
-# |     +---------------+                                                               |
-# |                                                                                     |
-# |     +++ !seen reset                                                                 |
 # +-------------------------------------------------------------------------------------+
 # | IMPORTANT:                                                                          |
 # |                                                                                     |
@@ -61,9 +55,20 @@ if {![file exists ${seen-path}]} {
 }
 
 proc seen:pub {nick uhost hand chan arg} {
-
+	global signore
+	
 	if {[lindex [split $arg] 0] eq "*!*@*"} { return }
 	if {[lindex [split $arg] 0] eq ""} { return }
+	if {[info exists signore($nick)]} { putlog "Seen il ignoram pe $nick"; return 0 }
+
+	## ++
+	set floodtime 10
+
+	## ++ 
+	if {![info exists signore($nick)]} {
+		set signore($nick) [unixtime]
+		utimer $floodtime [list unset -nocomplain signore($nick)]
+	}
 	
 	set value [lindex [split $arg] 0]
 
@@ -186,7 +191,7 @@ proc seen {cmd value chan nick} {
 			close $in
 		}
 		"default" {
-			if {[onchan $value $chan]} { putserv "NOTICE $nick :$value is already on $chan"; return}
+			if {[onchan $value $chan]} { putserv "PRIVMSG $chan :$value is already on $chan"; return}
 			
 			unset -nocomplain found
 
@@ -466,4 +471,4 @@ proc seen:parse {nick chan} {
 	return $::temp(return)
 }
 
-putlog "Succesfully loaded: \00303Seen TCL Script"
+putlog "+++ Succesfully loaded: -\00304seen\003- TCL Script"
