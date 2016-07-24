@@ -76,7 +76,7 @@ proc seen:pub {nick uhost hand chan arg} {
 		set arg [join [lrange [split $arg] 2 end]]
 	} else { return 0 }
 
-	if {[info commands seen:pubcmd] ne ""} { seen:pubcmd $nick $uhost $hand $chan $arg }
+	if {[info commands $temp(cmd):pubcmd] ne ""} { $temp(cmd):pubcmd $nick $uhost $hand $chan $arg }
 }
 
 proc seen:pubcmd {nick uhost hand chan arg} {
