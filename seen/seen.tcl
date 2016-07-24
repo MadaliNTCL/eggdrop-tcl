@@ -30,10 +30,10 @@
 # +-------------------------------------------------------------------------------------+
 # | IMPORTANT:                                                                          |
 # |                                                                                     |
-# | There is no need for script activation                                              | 
+# | There is no need for script activation                                              |
 # +-------------------------------------------------------------------------------------+
 
-bind PUB - !seen seen:pub
+bind PUBM - * seen:pub
 
 bind JOIN - * seen:join
 bind JOIN - * seen:check
@@ -43,13 +43,15 @@ bind KICK - * seen:kick
 bind SPLT - * seen:split
 bind NICK - * seen:nick
 
-set seen-path "netbots/database/seen" 
+setudef flag seen
 
-if {![file exists ${seen-path}]} { 
+set seen-path "netbots/database/seen"
+
+if {![file exists ${seen-path}]} {
 	putlog "\00405Instalam Seen Script.."
-	
+
 	file mkdir ${seen-path}
-	
+
 	set in [open ${seen-path}/seen.check w]; close $in
 	set in [open ${seen-path}/seen w]; close $in
 }
@@ -57,55 +59,81 @@ if {![file exists ${seen-path}]} {
 proc seen:pub {nick uhost hand chan arg} {
 	global signore
 	
-	if {[lindex [split $arg] 0] eq "*!*@*"} { return }
-	if {[lindex [split $arg] 0] eq ""} { return }
-	if {[info exists signore($nick)]} { putlog "Seen il ignoram pe $nick"; return 0 }
+	if {[lindex [split $arg] 1] eq "*!*@*"} { return }
+	if {[lindex [split $arg] 1] eq ""} { return }
+	if {[info exists signore($nick)]} { return }
 
-	## ++
+	if {[string index $arg 0] in {! . `}} {
+		set temp(cmd) [string range $arg 1 end]
+		set temp(cmd) [lindex [split $temp(cmd)] 0]		
+		set arg [join [lrange [split $arg] 1 end]]
+	} elseif {[isbotnick [lindex [split $arg] 0]]} {
+		set temp(cmd) [lindex [split $arg] 1]
+		set arg [join [lrange [split $arg] 2 end]]
+	} else { return 0 }
+
+	if {[info commands seen:pubcmd] ne ""} { seen:pubcmd $nick $uhost $hand $chan $arg }
+}
+
+proc seen:pubcmd {nick uhost hand chan arg} {
+	global signore
+
 	set floodtime 10
 
-	## ++ 
-	if {![info exists signore($nick)]} {
-		set signore($nick) [unixtime]
-		utimer $floodtime [list unset -nocomplain signore($nick)]
-	}
-	
 	set value [lindex [split $arg] 0]
 
 	switch -exact -- [lindex [split $arg] 0] {
+		on { if {![matchattr $hand n]} { return }; seen on $value $chan $nick }
+		off { if {![matchattr $hand n ]} { return }; seen off $value $chan $nick }
 		stats { seen stats $value $chan $nick }
-		top { seen top $value $chan $nick } 
-		reset { seen reset $value $chan $hand } 
+		top { seen top $value $chan $nick }
+		reset { if {![matchattr $hand n ]} { return }; seen reset $value $chan $hand }
 		default { seen search $value $chan $nick }
+	}
+
+	if {![matchattr $hand n]} {
+		if {![info exists signore($nick)]} {
+			set signore($nick) [unixtime]
+
+			utimer $floodtime [list unset -nocomplain signore($nick)]
+		}
 	}
 }
 
 proc seen {cmd value chan nick} {
 	global seen-path
-	
+
 	switch -exact -- $cmd {
+		"on" {
+			channel set $chan +seen
+
+			putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306+seen\00302 on \00304$chan"
+		}
+		"off" {
+			channel set $chan -seen
+
+			putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306-seen\00302 on \00304$chan"
+		}
 		"reset" {
-			if {![matchattr $nick n]} { return }
-			
 			set a [open ${seen-path}/seen w]; close $a
 			set b [open ${seen-path}/seen.check w]; close $b
-			
+
 			putserv "NOTICE $nick :Am sters cu succes baza de date"
 		}
 		"top" {
 			set temp(display) ""; set temp(say) ""; set temp(announce) ""
 			array set times "";
-			
+
 			set in [open "netbots/database/seen/seen.check" r]
 
 			while {[gets $in line] != -1} {
-					if {[lindex [split $line] 0] ne ""} {
-						incr times([lindex [split $line] 0]) [lindex [split $line] 4]
-					}
+				if {[lindex [split $line] 0] ne ""} {
+					incr times([lindex [split $line] 0]) [lindex [split $line] 4]
+				}
 			}
 			close $in
 
-			
+
 			foreach n [array names times] { lappend temp(display) "$n $times($n)" }
 
 			set temp(say) [lsort -decreasing -index 1 $temp(display)]
@@ -118,9 +146,9 @@ proc seen {cmd value chan nick} {
 			}
 
 			set top [join [lrange $temp(announce) 0 9]]
-			
+
 			putserv "PRIVMSG $chan :** \00312Top 10 \00304\002Most Wanted\002\003 ** [join $temp(announce) "\002,\002 "]"
-		}		
+		}
 		"stats" {
 			set temp(chans) ""
 			set temp(users) ""
@@ -191,8 +219,9 @@ proc seen {cmd value chan nick} {
 			close $in
 		}
 		"default" {
+			if {![channel get $chan seen]} { return }
 			if {[onchan $value $chan]} { putserv "PRIVMSG $chan :$value is already on $chan"; return}
-			
+
 			unset -nocomplain found
 
 			set in [open "netbots/database/seen/seen" r]
@@ -237,7 +266,7 @@ proc seen {cmd value chan nick} {
 
 			if {[info exists reply]} {  putserv "NOTICE $nick :$reply" }
 			if {![info exists found]} { seen hostname $value $chan $nick; return }
-			
+
 			close $in
 
 			set a [open "netbots/database/seen/seen.check" r]
@@ -457,7 +486,7 @@ proc seen:check {nick uhost hand chan} {
 
 proc seen:parse {nick chan} {
 	global temp
-	
+
 	set a [open "netbots/database/seen/seen" r]
 
 	set temp(return) ""
@@ -467,8 +496,8 @@ proc seen:parse {nick chan} {
 		}
 	}
 	close $a
-	
+
 	return $::temp(return)
 }
 
-putlog "+++ Succesfully loaded: -\00304seen\003- TCL Script"
+putlog "Succesfully loaded: \00303Seen TCL Script"
