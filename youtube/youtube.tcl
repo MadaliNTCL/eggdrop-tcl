@@ -40,7 +40,7 @@ package require json
 package require http
 package require tls
 
-set youtube(api) ""
+set youtube(api) "AIzaSyDxNwsjQz_ESuj2D8TnREIKvkTarPGlyaA"
 
 setudef flag youtube
 
