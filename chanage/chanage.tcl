@@ -53,16 +53,18 @@ proc chanage:cacmd {nick uhost hand chan arg} {
 	
 	set target [lindex [split $arg] 0]
 
-	if {![validchan $target]} { putserv "PRIVMSG $chan :\00304$target\003 is not a validchan"; return }
 	if {[isop $nick $chan] || [isvoice $nick $chan]} {
 		if {$target eq ""} {
 			set chaninfo(channel) "$chan"
 			set chaninfo(home)    "$chan"
 			
 			bind RAW - "329" reply:pub:mode
+			bind RAW - "403" reply:pub:nochan
 			
-			putquick "MODE $target"
+			putquick "MODE $chan"
 		} else {
+			if {![validchan $target]} { putserv "PRIVMSG $chan :\00304$target\003 is not a validchan"; return }
+			
 			set chaninfo(channel) "$target"
 			set chaninfo(home) "$chan"
 			
