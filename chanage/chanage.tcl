@@ -92,8 +92,9 @@ proc reply:pub:mode {from key args} {
 	global chaninfo
 
 	set creation [lindex [join $args] end]
-
-	putquick "PRIVMSG $chaninfo(home) :\00302The channel (\00304$chaninfo(channel)\003) \00302was created on: \00304[ctime $creation] (\00312[duration [expr [clock seconds]-$creation]] \00302ago\003)"
+	set c [clock format $creation -format "%d.%m.%Y/%R-%p"]
+	
+	putquick "PRIVMSG $chaninfo(home) :\00302The channel (\00304$chaninfo(channel)\003) \00302was created on: \00304$c (\00312[duration [expr [clock seconds]-$creation]] \00302ago\003)"
 
 	unbind RAW - "329" reply:pub:mode
 	unbind RAW - "403" reply:pub:nochan
