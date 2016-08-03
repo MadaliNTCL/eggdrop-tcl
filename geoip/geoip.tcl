@@ -24,12 +24,12 @@
 # |     [ OP - PUBLIC]                                                                  |
 # |     +---------------+                                                               |
 # |                                                                                     |
-# |     +++ !weather on                                                                 |
-# |     +++ !weather off                                                                |
+# |     +++ !top country                                                                |
+# |     +++ !top city                                                                   |
 # |                                                                                     |
-# | IMPORTANT:                                                                          |
+# | IMPORTANT                                                                           |
+# | - .chanset #channel +geoip (dcc chat)                                               |
 # |                                                                                     |
-# | 500 requets per day                                                                 |
 # +-------------------------------------------------------------------------------------+
 
 bind JOIN - * geoip
@@ -89,7 +89,6 @@ proc geoip:top {nick uhost hand chan arg} {
 				}
 			}
 		}
-
 	}
 }
 
@@ -213,7 +212,7 @@ proc geoip:check {what chan} {
 
 			set temp(list) [lsort -integer -decreasing -index 1 $temp(list)]
 
-			foreach x $temp(list) { return "[lindex [split $x] 0]" }
+			foreach x $temp(list) { return "[join [lrange $x 0 0]]" }
 		}
 		oras -
 		city {
@@ -224,7 +223,7 @@ proc geoip:check {what chan} {
 
 			set temp(list) [lsort -integer -decreasing -index 1 $temp(list)]
 
-			foreach x $temp(list) { return "[lindex [split $x] 0]" }
+			foreach x $temp(list) { return "[join [lrange $x 0 0]]" }
 		}
 		ccountry { set nr 0; foreach n [array names top $chan,country,*] { incr nr }; return $nr }
 		ccity { set nr 0; foreach n [array names top $chan,city,*] { incr nr }; return $nr }
