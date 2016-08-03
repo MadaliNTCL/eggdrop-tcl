@@ -21,11 +21,11 @@ Automated routine to check if any user is IDLEing so that it can be DEVOICE/DEOP
     <th><b>Description</b></th>
   </tr>
   <tr>
-    <td>!idleaction deop on/off <time in minutes></td>
+    <td>!idleaction deop on/off [time in minutes]</td>
     <td>Activates/deactivates deop routine</td>
   </tr>
   <tr>
-    <td>!idleaction devoice on/off <time in minutes></td>
+    <td>!idleaction devoice on/off [time in minutes]</td>
     <td>Activates/deactivates devoice routine</td>
   </tr>
 </table>
