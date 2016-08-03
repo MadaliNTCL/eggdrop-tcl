@@ -20,11 +20,16 @@
 # |                                                                                     |
 # +-------------------------------------------------------------------------------------+
 # + *** Commands ***                                                                    |
-# |     +---------------+                                                               |
-# |     [ USER - PUBLIC ]                                                               |
-# |     +---------------+                                                               |
+# |     +----------------+                                                              |
+# |     [ ADMIN - PUBLIC ]                                                              |
+# |     +----------------+                                                              |
 # |                                                                                     |
-# |     ++ !idleaction <deop/devoice> <on/off/time>                                     |
+# |     ++ !idleaction <deop on/off 10>                                                 |
+# |     ++ !idleaction <devoice on/off 10>                                              |
+# |     ++ !idleaction status                                                           |
+# |                                                                                     |
+# | IMPORTANT                                                                           |
+# | - Deop/devoice time is SET in minutes                                               |
 # |                                                                                     |
 # +-------------------------------------------------------------------------------------+
 
@@ -54,11 +59,12 @@ proc idleaction:pubm {nick uhost hand chan arg} {
 
 proc idleaction:icpubcmd {nick uhost hand chan arg} {
 
-	putlog "[lindex [split $arg] 0] -- [lindex [split $arg] 1] -- [lindex [split $arg] 2] -- [lindex [split $arg] 3]"
 	switch -exact -- [lindex [split $arg] 0] {
 		deop {
 			switch -exact -- [lindex [split $arg] 1] {
 				on {
+					if {![matchattr $hand n]} { return }
+					
 					if {[lindex [split $arg] 2] eq ""} {
 						channel set $chan +idledeop
 						channel set $chan ideop "120"
@@ -74,6 +80,8 @@ proc idleaction:icpubcmd {nick uhost hand chan arg} {
 					}
 				}
 				off {
+					if {![matchattr $hand n]} { return }
+					
 					if {[lindex [split $arg] 2] eq ""} {
 						channel set $chan -idledeop
 						channel set $chan ideop ""
@@ -86,6 +94,8 @@ proc idleaction:icpubcmd {nick uhost hand chan arg} {
 		devoice {
 			switch -exact -- [lindex [split $arg] 1] {
 				on {
+					if {![matchattr $hand n]} { return }
+					
 					if {[lindex [split $arg] 2] eq ""} {
 						channel set $chan +idledevoice
 						channel set $chan idevoice "120"
@@ -100,12 +110,20 @@ proc idleaction:icpubcmd {nick uhost hand chan arg} {
 					}
 				}
 				off {
+					if {![matchattr $hand n]} { return }
+					
 					channel set $chan -idledevoice
 					channel set $chan idevoice ""
 
 					putquick "PRIVMSG $chan :\002$nick\002 - \00312Idle-devoice\00302 has been succesfully set \00304OFF\003"
 				}
 			}
+		}
+		status {
+			if {[channel get $chan idledevoice]} { set idvstatus "\002\00312ACTIVE\003\002" } else { set idvstatus "\00304INACTIVE\003"  }
+			if {[channel get $chan idledeop]} { set idostatus "\002\00312ACTIVE\003\002" } else { set idostatus "\00304INACTIVE\003"  }
+			
+			putquick "PRIVMSG $chan :\002$nick\002 - \00302Idle-deop\003: $idostatus (\00303[channel get $chan ideop]\00302 minutes) \037\002/\037\002 \00302Idle-devoice\003: $idvstatus (\00303[channel get $chan idevoice]\00302 minutes\003)"
 		}
 	}
 }
@@ -118,7 +136,7 @@ proc idleaction:routine {min hour day month year} {
 			set idevoice [channel get $chan idevoice]
 
 			foreach nick [chanlist $chan] { 
-				if {![isbotnick $nic] && [isvoice $nick $chan]} { if {[getchanidle $nick $chan] >= $idevoice} { pushmode $chan -v $nick } } }
+				if {![isbotnick $nick] && [isvoice $nick $chan]} { if {[getchanidle $nick $chan] >= $idevoice} { pushmode $chan -v $nick } } }
 		}
 	}
 	flushmode $chan
@@ -129,7 +147,7 @@ proc idleaction:routine {min hour day month year} {
 			set ideop [channel get $chan ideop]
 
 			foreach nick [chanlist $chan] { 
-				if {![isbotnick $nic] && [isvoice $nick $chan]} { if {[getchanidle $nick $chan] >= $ideop} { pushmode $chan -o $nick } } }
+				if {![isbotnick $nick] && [isvoice $nick $chan]} { if {[getchanidle $nick $chan] >= $ideop} { pushmode $chan -o $nick } } }
 		}
 	}	
 	flushmode $chan
