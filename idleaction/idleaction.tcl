@@ -142,7 +142,7 @@ proc idleaction:routine {min hour day month year} {
 			set ideop [channel get $chan ideop]
 
 			foreach nick [chanlist $chan] { 
-				if {![isbotnick $nick] && [isvoice $nick $chan]} { if {[getchanidle $nick $chan] >= $ideop} { pushmode $chan -o $nick } } }
+				if {![isbotnick $nick] && [isop $nick $chan]} { if {[getchanidle $nick $chan] >= $ideop} { pushmode $chan -o $nick } } }
 		}
 	}	
 	flushmode $chan
