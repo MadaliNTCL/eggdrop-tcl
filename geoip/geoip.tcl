@@ -26,6 +26,7 @@
 # |                                                                                     |
 # |     +++ !top country                                                                |
 # |     +++ !top city                                                                   |
+# |     +++ !geoip on/off                                                               |
 # |                                                                                     |
 # | IMPORTANT                                                                           |
 # | - .chanset #channel +geoip (dcc chat)                                               |
