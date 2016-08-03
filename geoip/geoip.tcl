@@ -61,10 +61,30 @@ proc geoip:main {nick uhost hand chan arg} {
 	if {[info commands geoip:$temp(cmd)] != ""} { geoip:$temp(cmd) $nick $uhost $hand $chan $arg }
 }
 
+proc geoip:geoip {nick uhost hand chan arg} {
+
+	switch -exact -- [lindex [split $arg] 0] {
+		on {
+			if {[matchattr $hand n]} {
+				channel set $chan +geoip
+				
+				putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306+geoip\0032 on \00304$chan"
+			}
+		}
+		off {
+			if {[matchattr $hand n]} {
+				channel set $chan -geoip
+				
+				putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306-geoip\0032 on \00304$chan"
+			}
+		}		
+	}
+}
+	
 proc geoip:top {nick uhost hand chan arg} {
 	global top temp
 
-	if {[isvoice $nick $chan] || [isop $nick $chan]} {
+	if {[isvoice $nick $chan] || [isop $nick $chan] && [channel get $chan geoip]} {
 		switch -exact -- [lindex [split $arg] 0] {
 			tara -
 			country {
