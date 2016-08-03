@@ -71,23 +71,19 @@ proc idleaction:icpubcmd {nick uhost hand chan arg} {
 
 						putquick "PRIVMSG $chan :\002$nick\002 - \00312Idle-deop\00302 has been succesfully set \00304ON\003, default deop time set to: \00304120 minutes"
 					} else {
-						if {[lindex [split $arg] 2] eq ""} {
-							channel set $chan +idledeop
-							channel set $chan ideop "[lindex [split $arg] 2]"
+						channel set $chan +idledeop
+						channel set $chan ideop "[lindex [split $arg] 2]"
 
-							putquick "PRIVMSG $chan :\002$nick\002 - \00312Idle-deop\00302 has been succesfully set \00304ON\003, default deop time set to: \00304[lindex [split $arg] 2] minutes"
-						}
+						putquick "PRIVMSG $chan :\002$nick\002 - \00312Idle-deop\00302 has been succesfully set \00304ON\003, deop time set to: \00304[lindex [split $arg] 2] minutes"
 					}
 				}
 				off {
 					if {![matchattr $hand n]} { return }
 					
-					if {[lindex [split $arg] 2] eq ""} {
-						channel set $chan -idledeop
-						channel set $chan ideop ""
+					channel set $chan -idledeop
+					channel set $chan ideop ""
 
-						putquick "PRIVMSG $chan :\002$nick\002 - \00312Idle-deop\00302 has been succesfully set \00304OFF\003"
-					}
+					putquick "PRIVMSG $chan :\002$nick\002 - \00312Idle-deop\00302 has been succesfully set \00304OFF\003"
 				}
 			}
 		}
@@ -102,7 +98,6 @@ proc idleaction:icpubcmd {nick uhost hand chan arg} {
 
 						putquick "PRIVMSG $chan :\002$nick\002 - \00312Idle-devoice\00302 has been succesfully set \00304ON\003, default devoice time set to: \00304120 minutes"
 					} else {
-						putlog aiciii
 						channel set $chan +idledevoice
 						channel set $chan idevoice [lindex [split $arg] 2]
 
