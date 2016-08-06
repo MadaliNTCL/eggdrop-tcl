@@ -119,7 +119,7 @@ proc seen {cmd value chan nick} {
 			putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306-seen\00302 on \00304$chan"
 		}
 		"reset" {
-			if {[channel get $chan seen]} { return }
+			if {![channel get $chan seen]} { return }
 			
 			set a [open ${seen-path}/seen w]; close $a
 			set b [open ${seen-path}/seen.check w]; close $b
@@ -127,7 +127,7 @@ proc seen {cmd value chan nick} {
 			putserv "NOTICE $nick :Am sters cu succes baza de date"
 		}
 		"top" {
-			if {[channel get $chan seen]} { return }
+			if {![channel get $chan seen]} { return }
 
 			set temp(display) ""; set temp(say) ""; set temp(announce) ""
 			array set times "";
@@ -158,7 +158,7 @@ proc seen {cmd value chan nick} {
 			putserv "PRIVMSG $chan :** \00312Top 10 \00304\002Most Wanted\002\003 ** [join $temp(announce) "\002,\002 "]"
 		}
 		"stats" {
-			if {[channel get $chan seen]} { return }
+			if {![channel get $chan seen]} { return }
 
 			set temp(chans) ""
 			set temp(users) ""
