@@ -89,8 +89,8 @@ proc seen:pubcmd {nick uhost hand chan arg} {
 	switch -exact -- [lindex [split $arg] 0] {
 		on { if {![matchattr $hand n]} { return }; seen on $value $chan $nick }
 		off { if {![matchattr $hand n ]} { return }; seen off $value $chan $nick }
-		stats { seen stats $value $chan $nick }
-		top { seen top $value $chan $nick }
+		stats { if {![matchattr $hand n ]} { return }; seen stats $value $chan $nick }
+		top { if {![matchattr $hand n ]} { return }; seen top $value $chan $nick }
 		reset { if {![matchattr $hand n ]} { return }; seen reset $value $chan $hand }
 		default { seen search $value $chan $nick }
 	}
@@ -119,12 +119,16 @@ proc seen {cmd value chan nick} {
 			putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306-seen\00302 on \00304$chan"
 		}
 		"reset" {
+			if {[channel get $chan seen]} { return }
+			
 			set a [open ${seen-path}/seen w]; close $a
 			set b [open ${seen-path}/seen.check w]; close $b
 
 			putserv "NOTICE $nick :Am sters cu succes baza de date"
 		}
 		"top" {
+			if {[channel get $chan seen]} { return }
+
 			set temp(display) ""; set temp(say) ""; set temp(announce) ""
 			array set times "";
 
@@ -154,6 +158,8 @@ proc seen {cmd value chan nick} {
 			putserv "PRIVMSG $chan :** \00312Top 10 \00304\002Most Wanted\002\003 ** [join $temp(announce) "\002,\002 "]"
 		}
 		"stats" {
+			if {[channel get $chan seen]} { return }
+
 			set temp(chans) ""
 			set temp(users) ""
 
@@ -277,6 +283,7 @@ proc seen {cmd value chan nick} {
 			set b [open "netbots/database/seen/seen.qcheck" w]
 
 			unset -nocomplain checked
+			
 			while {[gets $a line] != -1} {
 				if {[string match -nocase [lindex [split $line] 1] $chan]} {
 					if {[string match -nocase [lindex [split $line] 0] $value]} {
