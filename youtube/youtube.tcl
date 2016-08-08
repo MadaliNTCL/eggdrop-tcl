@@ -28,8 +28,6 @@
 # |     +++ !youtube off                                                                |
 # |                                                                                     |
 # | IMPORTANT:                                                                          |
-# |                                                                                     |
-# | 500 requets per day                                                                 | 
 # | You need Google Api Key                                                             |
 # +-------------------------------------------------------------------------------------+
 
@@ -40,7 +38,7 @@ package require json
 package require http
 package require tls
 
-set youtube(api) "AIzaSyDxNwsjQz_ESuj2D8TnREIKvkTarPGlyaA"
+set youtube(api) "key goes here"
 
 setudef flag youtube
 
@@ -98,7 +96,7 @@ proc youtube {nick uhost hand chan arg} {
 
 	set youtubecheck [regexp -all -nocase {(?:\/watch\?v=|youtu\.be\/)([\d\w-]{11})} $arg match youtubeid]
 	
-	::http::register https 443 ::tls::socket
+	::http::register https 443 [list ::tls::socket -tls1 1] 
 
 	if {[catch {http::geturl "https://www.googleapis.com/youtube/v3/videos?[http::formatQuery id $youtubeid key $youtube(api) part snippet,contentDetails,statistics,status]"} tok]} {
 		putlog "Socket error: $tok"
@@ -128,10 +126,15 @@ proc youtube {nick uhost hand chan arg} {
 	set likeCount [lindex [dict get [lindex [dict get $parse items] 0] statistics] 3]
 	set dislikeCount [lindex [dict get [lindex [dict get $parse items] 0] statistics] 5]
 	set commentCount [lindex [dict get [lindex [dict get $parse items] 0] statistics] 9]
-
-	putserv "PRIVMSG $chan :\002\00301,00You\00300,04Tube\002\017 \00312$title\003 \037\002/\002\037 \00302Views\003: \00303[youtube:convert $viewCount]\003 \037\002/\002\037 \00302Likes\003: \00310[youtube:convert $likeCount]\003 \037\002/\002\037 \00302Dislikes\003: \00304[youtube:convert $dislikeCount]\003 \037\002/\002\037 \00302Comments\003: \00304[youtube:convert $commentCount]\003"
+	set publishedAt [lindex [dict get [lindex [dict get $parse items] 0] snippet] 1]
+	set publishedAt [string map [list "T" " " ".000Z" ""] $publishedAt]
+	set duration [lindex [dict get [lindex [dict get $parse items] 0] contentDetails] 1]
+	set duration [string map [list "PT" "" "M" "m " "S" "s"] $duration]
+	set definition [string toupper [lindex [dict get [lindex [dict get $parse items] 0] contentDetails] 5]]
+	
+	putserv "PRIVMSG $chan :\002\00301,00You\00300,04Tube\002\017 \00312$title\003 \002\00304$definition\003\002 \037\002/\002\037 \00302Views\003: \00303[youtube:convert $viewCount]\003 \037\002/\002\037 \00302Likes\003: \00310[youtube:convert $likeCount]\003 \037\002/\002\037 \00302Dislikes\003: \00304[youtube:convert $dislikeCount]\003 \037\002/\002\037 \00302Comments\003: \00304[youtube:convert $commentCount]\003 \037\002/\002\037 \00302Duration: \00304$duration\003 \037\002/\002\037 \00302Published at: \00304$publishedAt"
 }
 
 proc youtube:convert {num} { while {[regsub {^([-+]?\d+)(\d\d\d)} $num "\\1.\\2" num]} {}; return $num }
 
-putlog "Succesfully loaded: \00303YouTUBE TCL Script..."
+putlog "Succesfully loaded: \00303YouTUBE TCL Script"
