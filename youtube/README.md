@@ -19,11 +19,11 @@
     <th><b>Description</b></th>
   </tr>
   <tr>
-    <td>link on (https://www.youtube.com/watch?v=Zy_yDb-qpa8 on)</td>
+    <td>!youtube on</td>
     <td>Activates the script on channel</td>
   </tr>
   <tr>
-    <td>link off (https://www.youtube.com/watch?v=Zy_yDb-qpa8 off)</td>
+    <td>!youtube on</td>
     <td>Deactivates the script on channel</td>
   </tr>
 </table>
