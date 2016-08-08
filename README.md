@@ -14,7 +14,7 @@ a
     <tr>
     <td>FreeNODE - DalNET - IrcNET - NextIRC - UnderNET - EfNET - QuakeNET</td>
     <td>#EggdropTCL</td>
-    <td>_MaDaLiN_ - EggdropTCL</td>
+    <td>_MaDaLiN_ - EggdropTCL </td>
   </tr>
   </table>
 <br>
