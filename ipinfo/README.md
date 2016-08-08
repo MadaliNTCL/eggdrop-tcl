@@ -2,7 +2,7 @@
 <title>ipinfo.tcl help file - PLEASE, keep in mind, this is a work in progess</title>
 <h2>Index</h2>
 <ul>
-<li><a href="#description">Description</a>
+<li><a href="#description">Description da</a>
 <li><a href="#commands">Commands</a>
 <li><a href="#contact">Contact</a>
 </ul>
