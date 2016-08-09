@@ -4,7 +4,7 @@
 You can contact me via E-Mail at <a href="mailto:madalinmen28@gmail.com">madalinmen28@gmail.com</a><br>or find me on IRC (networks: QuakeNET/UnderNET/EfNET channel: #EggdropTCL).
 a
 <table "id="t01"> 
-<caption><h3>IRC Networks.</h3></caption>
+<caption><h3>IRC Networks</h3></caption>
   <tr>
     <th><b>Name</b></th>
     <th><b>Channel</b></th>
