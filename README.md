@@ -2,7 +2,7 @@
 <title>PLEASE, keep in mind, this is a work in progess</title>
 <a name="contact"><h2>Contact</h2></a>
 You can contact me via E-Mail at <a href="mailto:madalinmen28@gmail.com">madalinmen28@gmail.com</a><br>or find me on IRC (networks: QuakeNET/UnderNET/EfNET channel: #EggdropTCL).
-a
+
 <table "id="t01"> 
 <caption><h3>IRC Networks</h3></caption>
   <tr>
