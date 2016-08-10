@@ -23,7 +23,7 @@
     <td>Activates the script on channel</td>
   </tr>
   <tr>
-    <td>!youtube on</td>
+    <td>!youtube off</td>
     <td>Deactivates the script on channel</td>
   </tr>
 </table>
