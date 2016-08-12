@@ -119,4 +119,4 @@ proc weather {nick uhost hand chan arg} {
 	$root delete
 }
 
-putlog "Succesfully loaded: \00303Weather TCL Script"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303Weather\003 \]"
