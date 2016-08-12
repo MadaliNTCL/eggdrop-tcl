@@ -511,4 +511,4 @@ proc seen:parse {nick chan} {
 	return $::temp(return)
 }
 
-putlog "Succesfully loaded: \00303Seen TCL Script"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303Seen003 \]"
