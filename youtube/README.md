@@ -26,6 +26,10 @@
     <td>!youtube off</td>
     <td>Deactivates the script on channel</td>
   </tr>
+  <tr>
+    <td>!youtube search <text></td>
+    <td>Will dispaly the top 5 titles based on viewCount</td>
+  </tr>  
 </table>
 <a name="installation"><h2>Installation</h2></a>
 To install this script you have to copy it to your /scripts/ directory and add <b>source scripts/youtube.tcl</b> to the bottom of your eggdrop.conf. It is recommended not to have too many scripts running on the same bots. Try to use a bot for a task, and another for a different task<p>
