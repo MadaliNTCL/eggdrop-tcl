@@ -121,4 +121,4 @@ proc command:ip {nick uhost hand chan arg} {
 	}
 }
 
-putlog "++ Succesfully loaded: \00312Ip Info"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303IPinfo\003 \]"
