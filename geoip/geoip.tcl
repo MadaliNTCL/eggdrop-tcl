@@ -272,4 +272,4 @@ proc geoip:save {} {
 
 catch {source geoip}
 
-putlog "Succesfully loaded: \00303GEOIp TCL Script"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303GEOip\003 \]"
