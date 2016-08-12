@@ -137,4 +137,4 @@ proc youtube {nick uhost hand chan arg} {
 
 proc youtube:convert {num} { while {[regsub {^([-+]?\d+)(\d\d\d)} $num "\\1.\\2" num]} {}; return $num }
 
-putlog "Succesfully loaded: \00303YouTUBE TCL Script"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303YouTUBE\003 \]"
