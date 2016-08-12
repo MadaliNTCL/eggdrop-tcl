@@ -172,4 +172,4 @@ proc idleaction:routine {min hour day month year} {
 	flushmode $chan
 }
 
-putlog "Succesfully loaded: \00303Idle Action TCL Script"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303Idle Action\003 \]"
