@@ -62,4 +62,4 @@ proc dns:pubm:dns {nick host hand chan arg} {
 
 }
 
-putlog "++ \[ - \00304PUBLIC\003 - \00303!dns\003 \] - succesfully loaded"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303Domain Name System\003 \]"
