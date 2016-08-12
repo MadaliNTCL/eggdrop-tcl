@@ -103,4 +103,4 @@ proc reply:pub:mode {from key args} {
 	unset chaninfo(home)
 }
 
-putlog "Succesfully loaded: \00303Chan Age TCL Script"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303ChanAGE\003 \]"
