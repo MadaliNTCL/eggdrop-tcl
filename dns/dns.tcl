@@ -54,7 +54,7 @@ proc dns:pubm:dns {nick host hand chan arg} {
 
 	foreach line [split $output \n] {
 		if {[string match -nocase "*address" [lindex [split $line] 2]]} { lappend temp(display) "IPv4: \00304[lindex [split $line] 3]\003" }
-		if {[string match -nocase "*IPv6" [lindex [split $line] 2]]} { lappend temp(display) "\037\002/\037\002 IPv6: \00304[lindex [split $line] 4]" }
+		if {[string match -nocase "*IPv6" [lindex [split $line] 2]]} { lappend temp(display) "\037\002/\037\002 IPv6: \00304[lindex [split $line] 4]\003" }
 		if {[string match -nocase "domain" [lindex [split $line] 1]]} { lappend temp(display) "\037\002/\037\002 Domain pointer: \00304[lindex $line 4]\003" }
 	}
 
