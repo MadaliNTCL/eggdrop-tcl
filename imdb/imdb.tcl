@@ -28,6 +28,7 @@
 # +-------------------------------------------------------------------------------------+
 
 bind PUBM - * imdb
+bind PUBM - * imdb:pubm
 
 package require json
 package require http
@@ -35,7 +36,22 @@ package require tdom
 
 setudef flag imdb
 
-proc imdb {nick uhost hand chan arg} {
+proc imdb:pubm {nick uhost hand chan arg} {
+	global temp
+
+	if {[string index $arg 0] in {! . `}} {
+		set temp(cmd) [string range $arg 1 end]
+		set temp(cmd) [lindex [split $temp(cmd)] 0]
+		set arg [join [lrange [split $arg] 1 end]]
+	} elseif {[isbotnick [lindex [split $arg] 0]]} {
+		set temp(cmd) [lindex [split $arg] 1]
+		set arg [join [lrange [split $arg] 2 end]]
+	} else { return 0 }
+
+	if {[info commands imdb:$temp(cmd)] ne ""} { imdb:$temp(cmd) $nick $uhost $hand $chan $arg }
+}
+
+proc imdb:imdb {nick uhost hand chan arg} {
 	global imdb iignore
 	
 	switch -exact -- [lindex [split $arg] 0] {
@@ -54,8 +70,11 @@ proc imdb {nick uhost hand chan arg} {
 			}
 		}		
 	}
+}
 	
-	if {![string match *imdb* $arg]} { return 0 }
+proc imdb {nick uhost hand chan arg} {
+	global imdb iignore
+	
 	if {![channel get $chan imdb]} { return }
 	
 	## ++
@@ -71,7 +90,7 @@ proc imdb {nick uhost hand chan arg} {
 	if {[expr [unixtime]-$iignore($nick)]>$floodtime} { putlog "ignoram"; return 0 }
 	
 	regexp -all -nocase {(tt[0-9]{7})} $arg match imdbid
-	putlog $imdbid
+
 	if {[catch {http::geturl http://www.omdbapi.com/?[http::formatQuery i $imdbid]} tok]} {
 		putlog "Socket error: $tok"
 		return 0
