@@ -151,12 +151,10 @@ proc shows.GetById {chan id} {
 		incr last
 
 		set airDate [string map [list "-" ""] [lindex $line 0]]
-		if {$last <= "3"} { putquick "PRIVMSG $chan :\002\037\[\002\037LasT\037\002\]\037\002 \00302Name\003: \00312[lindex $line 2]\003 - \00304[lindex $line 1]\003 airs in \00303[convert:myshows [duration $airDate]]" }
+		if {$last <= "3"} { putquick "PRIVMSG $chan :\002\037\[\002\037LasT\037\002\]\037\002 \00302Name\003: \00312[lindex $line 2]\003 - \00304[lindex $line 1]\003 aired \00303[convert:myshows [duration $airDate]] ago" }
 	}
 }
 
-proc convert:myshows {arg} {
+proc convert:myshows {arg} { return [string map [list " years" "y" " year" "y" " months" "m" " month" "m" " weeks" "w" " week" "w" " days" "d" " day" "d" " hours" "h" " hour" "h" " minutes" "m" " minute" "m" " seconds" "s" " second" "s"] $arg] }
 
-	return [string map [list " years" "y" " year" "y" " months" "m" " month" "m" " weeks" "w" " week" "w" " days" "d" " day" "d" " hours" "h" " hour" "h" " minutes" "m" " minute" "m" " seconds" "s" " second" "s"] $arg]
-}
 putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303MyShows\003 \]"
