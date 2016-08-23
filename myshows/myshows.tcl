@@ -125,10 +125,11 @@ proc shows.GetById {chan id} {
 	set temp(next5) ""; set temp(last5) ""
 
 	foreach episode $temp(episode-list) {
-		set airDate [expr [clock scan [string map [list "T" " " "+0000" ""] [dict get $episode airDate]]] - [unixtime]]
+		if {![string match -nocase [dict get $episode airDate] "null"]} { set airDate [expr [clock scan [string map [list "T" " " "+0000" ""] [dict get $episode airDate]]] - [unixtime]] }
 		set shortName [dict get $episode shortName]
 		set title [dict get $episode title]
 
+		putlog "$airDate -- $shortName -- $title"
 		if {![string match -nocase *-* $airDate]} {
 			lappend temp(next5) "[list $airDate $shortName $title]"
 		} else {
