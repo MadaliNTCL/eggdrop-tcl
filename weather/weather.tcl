@@ -24,13 +24,10 @@
 # |     [ OP - PUBLIC]                                                                  |
 # |     +---------------+                                                               |
 # |                                                                                     |
-# |     +++ !weather on                                                                 |
-# |     +++ !weather off                                                                |
+# |     +++ !w on                                                                       |
+# |     +++ !w off                                                                      |
+# |     +++ !w <city>                                                                   |
 # |                                                                                     |
-# | IMPORTANT:                                                                          |
-# |                                                                                     |
-# | 500 requets per day                                                                 |
-# | You need www.worldweatheronline.com Api Key                                         |
 # +-------------------------------------------------------------------------------------+
 
 bind PUB - !w weather
@@ -39,7 +36,7 @@ package require json
 package require http
 package require tdom
 
-set weather(api) ""
+set weather(api) "59264c8c829cbcd87204931c232b8ae5"
 
 setudef flag weather
 
@@ -77,7 +74,7 @@ proc weather {nick uhost hand chan arg} {
 	## ++ 
 	if {[expr [unixtime]-$wignore($nick)]>$floodtime} { putlog "ignoram"; return 0 }
 	
-	if {[catch {http::geturl http://api.worldweatheronline.com/premium/v1/weather.ashx?[http::formatQuery key $weather(api) q [lindex [split $arg] 0] date_format unix format xml]} tok]} {
+	if {[catch {http::geturl http://api.openweathermap.org/data/2.5/weather?[http::formatQuery q [lindex [split $arg] 0] appid $weather(api) lang ro units metric]} tok]} {
 		putlog "Socket error: $tok"
 		return 0
 	}
@@ -97,26 +94,19 @@ proc weather {nick uhost hand chan arg} {
 
 	set data [http::data $tok]
 	http::cleanup $tok
-	set XML $data
+	set parse [::json::json2dict $data]
 
-	set doc [dom parse $XML]
-	set root [$doc documentElement]
-
-	## ++ Astronomy
-	set sunrise [$root selectNodes weather/astronomy/sunrise]; set sunrise [lindex $sunrise 0]; set sunrise [$sunrise asText]
-	set sunset [$root selectNodes weather/astronomy/sunset]; set sunset [lindex $sunset 0]; set sunset [$sunset asText]
+	set sunrise [clock format [join [dict get $parse sys sunrise]] -format "%H:%M"]
+	set sunset [clock format [join [dict get $parse sys sunset]] -format "%H:%M"]
+	set query [join [dict get $parse sys country]]
+	set temp_C [join [dict get $parse main temp]]
+	set humidity [join [dict get $parse main humidity]]
+	set windspeedKmph [join [dict get $parse wind speed]]
+	set cloudcover [join [dict get $parse clouds all]]
+	set dt [duration [expr [unixtime] - [dict get $parse dt]]]
+	set clouds [dict get [lindex [dict get $parse weather] 0] description]
 	
-	set query [$root selectNodes request/query]; set query [$query asText]
-	set temp_C [$root selectNodes current_condition/temp_C]; set temp_C [$temp_C asText]
-	set FeelsLikeC [$root selectNodes current_condition/FeelsLikeC]; set FeelsLikeC [$FeelsLikeC asText]
-	set humidity [$root selectNodes current_condition/humidity]; set humidity [$humidity asText]
-	set winddir16Point [$root selectNodes current_condition/winddir16Point]; set winddir16Point [$winddir16Point asText]
-	set windspeedKmph [$root selectNodes weather/hourly/windspeedKmph]; set windspeedKmph [lindex [split $windspeedKmph] 0]; set windspeedKmph [$windspeedKmph asText]
-	set cloudcover [$root selectNodes weather/hourly/cloudcover]; set cloudcover [lindex [split $cloudcover] 0]; set cloudcover [$cloudcover asText]
-
-	putserv "PRIVMSG $chan :\002$query\002 -- \00302Temperaturã\003: \00304$temp_C °C\003 (\00305Se simt ca: \00304$FeelsLikeC °C\003) \002\037/\037\002 \00302Umiditate\003: \00304$humidity %\003 \002\037/\037\002 \00302Vânt\003: \00304$winddir16Point\003 @ \00304$windspeedKmph km/h\003 \002\037/\037\002 \00302Acoperire nori\003: \00304$cloudcover %. \00302Astronomie\003 (Rasarit: \00304$sunrise\003 \002\037/\037\002 Apus: \00304$sunset\003)"
-
-	$root delete
+	putserv "PRIVMSG $chan :\002$arg, $query\002 -- \00302Temperaturã\003: \00304$temp_C °C\003 \002\037/\037\002 \00302Umiditate\003: \00304$humidity %\003 \002\037/\037\002 \00302Vânt\003: \00304$windspeedKmph km/h\003 \002\037/\037\002 \00302Acoperire nori\003: \00304$cloudcover % (\00305$clouds). \00302Astronomie\003 (Rasarit: \00304$sunrise\003 \002\037/\037\002 Apus: \00304$sunset\003) - \00302Ultimul update: \00304$dt"
 }
 
 putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303Weather\003 \]"
