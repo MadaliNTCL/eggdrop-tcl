@@ -1,6 +1,6 @@
 # +-------------------------------------------------------------------------------------+
 # |                                                                                     |
-# |                         YouTUBE Script v1.0.0                                       |
+# |                         YouTUBE Script v2.0.0                                       |
 # |                                                                                     |
 # +-------------------------------------------------------------------------------------+
 # |                                                                                     |
@@ -29,18 +29,24 @@
 # |                                                                                     |
 # | IMPORTANT:                                                                          |
 # |                                                                                     |
-# | 500 requets per day                                                                 |
+# | 500 requests per day                                                                |
 # | You need Google Api Key                                                             |
+# |                                                                                     |
+# | Updates:                                                                            |
+# | * v2                                                                                |
+# | -- It now catches the youtube link from /me and /ame                                |
 # +-------------------------------------------------------------------------------------+
 
 bind PUBM - * youtube
 bind PUBM - * youtube:pubm
+bind CTCP - ACTION youtube:act
 
 package require json
 package require http
 package require tls
 
 set youtube(api) "AIzaSyBampY7KsA-c0Ho__pfT4P2CwDnOB2h_tQ"
+set youtube(version) "2.0"
 
 setudef flag youtube
 
@@ -64,19 +70,22 @@ proc ytpubm:youtube {nick uhost hand chan arg} {
 
 	switch -exact -- [lindex [split $arg] 0] {
 		on {
-			if {[isop $nick $chan]} {
+			if {[isop $nick $chan] || [matchattr $hand n]} {
 				channel set $chan +youtube
 
 				putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306+youtube\0032 on \00304$chan"
+				return
 			}
 		}
 		off {
-			if {[isop $nick $chan]} {
+			if {[isop $nick $chan] || [matchattr $hand n]} {
 				channel set $chan -youtube
 
 				putserv "PRIVMSG $chan :\002$nick\002 - \00302Set channel mode \00306-youtube\0032 on \00304$chan"
+				return
 			}
 		}
+		top {}
 		search {
 			::http::register https 443 [list ::tls::socket -tls1 1]
 
@@ -125,6 +134,29 @@ proc ytpubm:youtube {nick uhost hand chan arg} {
 	}
 }
 
+proc youtube:act {nick uhost hand dest key arg} {
+	global ytignore youtube
+
+	if {![channel get $dest youtube]} { return 0 }
+	if {![string match -nocase *yout* $arg]} { return 0 }
+
+	## ++
+	set floodtime 10
+
+	## ++
+	if {![info exists ytignore($nick)]} {
+		set ytignore($nick) [unixtime]
+		utimer $floodtime [list unset -nocomplain ytignore($nick)]
+	}
+
+	## ++
+	if {[expr [unixtime]-$ytignore($nick)]>$floodtime} { putlog "ignoram"; return 0 }
+
+	set youtubecheck [regexp -all -nocase {(?:\/watch\?v=|youtu\.be\/)([\d\w-]{11})} $arg match youtubeid]
+
+	youtube:parse $youtubecheck $match $youtubeid $dest
+}
+
 proc youtube {nick uhost hand chan arg} {
 	global ytignore youtube
 
@@ -144,6 +176,12 @@ proc youtube {nick uhost hand chan arg} {
 	if {[expr [unixtime]-$ytignore($nick)]>$floodtime} { putlog "ignoram"; return 0 }
 
 	set youtubecheck [regexp -all -nocase {(?:\/watch\?v=|youtu\.be\/)([\d\w-]{11})} $arg match youtubeid]
+
+	youtube:parse $youtubecheck $match $youtubeid $chan
+}
+
+proc youtube:parse {youtubecheck match youtubeid dest} {
+	global ytignore youtube
 
 	::http::register https 443 [list ::tls::socket -tls1 1]
 
@@ -181,7 +219,7 @@ proc youtube {nick uhost hand chan arg} {
 	set duration [string map [list "PT" "" "M" "m " "S" "s"] $duration]
 	set definition [string toupper [lindex [dict get [lindex [dict get $parse items] 0] contentDetails] 5]]
 
-	putserv "PRIVMSG $chan :\002\00301,00You\00300,04Tube\002\017 \00312$title\003 \002\00304$definition\003\002 \037\002/\002\037 \00302Views\003: \00303[youtube:convert $viewCount]\003 \037\002/\002\037 \00302Likes\003: \00310[youtube:convert $likeCount]\003 \037\002/\002\037 \00302Dislikes\003: \00304[youtube:convert $dislikeCount]\003 \037\002/\002\037 \00302Comments\003: \00304[youtube:convert $commentCount]\003 \037\002/\002\037 \00302Duration: \00304$duration\003 \037\002/\002\037 \00302Published at: \00304$publishedAt"
+	putserv "PRIVMSG $dest :\002\00301,00You\00300,04Tube\002\017 \00312$title\003 \002\00304$definition\003\002 \037\002/\002\037 \00302Views\003: \00303[youtube:convert $viewCount]\003 \037\002/\002\037 \00302Likes\003: \00310[youtube:convert $likeCount]\003 \037\002/\002\037 \00302Dislikes\003: \00304[youtube:convert $dislikeCount]\003 \037\002/\002\037 \00302Comments\003: \00304[youtube:convert $commentCount]\003 \037\002/\002\037 \00302Duration: \00304$duration\003 \037\002/\002\037 \00302Published at: \00304$publishedAt"
 }
 
 proc youtube:convert {num} { while {[regsub {^([-+]?\d+)(\d\d\d)} $num "\\1.\\2" num]} {}; return $num }
