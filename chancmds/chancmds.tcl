@@ -94,14 +94,14 @@ proc chancmds:pubm {nick uhost hand chan arg} {
 proc chancmds:chancmds {nick host hand chan text} {
 	global cmds
 
-	switch -exact -nocase [lindex [split $text] 0] {
+	switch -nocase -- [lindex [split $text] 0] {
 		add {
 			if {![matchattr $hand n]} { return }
 			if {![regexp {^(privmsg|notice|chan)$} [lindex [split $text] 2]]} { putserv "PRIVMSG $chan :\002$nick\002 - \00302available types are \00303privmsg\003|\00303notice\003|\00303chan\00302 you typed \00304[lindex [split $text] 2]\00302 do you see the problem?"; return }
 
 			set cmds([lindex [split $text] 1],$chan) "[lindex [split $text] 2] [join [lrange $text 3 end]]"
 			chancmds:save
-			
+
 			putserv "PRIVMSG $chan :\002$nick\002 - \00302Added command \00303[lindex [split $text] 1]\003 with text \00312[join [lrange $text 3 end]]\00302 via \00304[join [lindex [split $text] 2]]"
 		}
 		del {
@@ -110,17 +110,20 @@ proc chancmds:chancmds {nick host hand chan text} {
 
 			unset cmds([lindex [split $text] 1],$chan)
 			chancmds:save
-			
+
 			putserv "PRIVMSG $chan :\002$nick\002 - \00302Succesfully deleted \00304[lindex [split $text] 1]\00302 command"
 			return
 		}
 		list {
 			if {![matchattr $hand n]} { return }
+
 			set temp(list) ""
+			set ok 0
 
 			foreach n [array names cmds] {
 				if {[string match -nocase [lindex [split $n ,] 1] $chan]} {
 					if {[lindex [split $n ,] 0] ne "greet"} {
+					set ok 1
 						lappend temp(list) "\00304[lindex [split $n ,] 0]\003"
 					}
 				}
@@ -128,8 +131,9 @@ proc chancmds:chancmds {nick host hand chan text} {
 
 			if {$temp(list) ne ""} {
 				putserv "PRIVMSG $chan :\002$nick\002 - \00302Available commands for \00312$chan\00302 are\003: [join $temp(list) "\002,\002 "]"
-			} else {
-				putserv "PRIVSMG $chan :\002$nick\002 - \00302Database for \00312$chan\03002 \002empty"
+			}
+			if {!$ok} {
+				putserv "PRIVMSG $chan :\002$nick\002 - \00302Database for \00312$chan\00302 \002empty"
 			}
 		}
 	}
