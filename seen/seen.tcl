@@ -172,10 +172,14 @@ proc seen {cmd value chan nick} {
 
 			close $in
 
-			set chans [llength [lsort -unique -index 0 $temp(chans)]]
-			set users [llength [lsort -unique -index 0 $temp(users)]]
+			set chans [llength [lsort -unique $temp(chans)]]
+			set users [llength [lsort -unique $temp(users)]]
 
 			putserv "PRIVMSG $chan :** Seen Statistics ** \00302Channels monitored: \00304\002$chans\002\003 -- \00302Users seen: \00304\002$users\002\003"
+		
+			set temp(chans) ""
+			set temp(users) ""
+
 		}
 		"hostname" {
 			set temp(list) ""
@@ -511,4 +515,4 @@ proc seen:parse {nick chan} {
 	return $::temp(return)
 }
 
-putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303Seen003 \]"
+putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303Seen\003 \]"
