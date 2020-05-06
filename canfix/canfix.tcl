@@ -46,11 +46,11 @@ proc canfix:notice {nick uhost hand text {dest ""}} {
 
 	set who [lindex [split $text] 0]
 
+        killutimer $temp(display)
+
 	if {[string match -nocase "*do not have a hi*" $text]} { putserv "PRIVMSG $temp(chan) :$text"; return }
 
 	if {[string match -nocase "*--*" $text]} { lappend temp(list) "\00303$who\003" }
-
-	killutimer $temp(display)
 	
 	set temp(display) [utimer 10 [list putserv "PRIVMSG $temp(chan) ::: Accounts who can issue fixes in channel $temp(chan): [join $temp(list) "\002,\002 "]"]]
 }
