@@ -32,17 +32,27 @@ bind notc - * canfix:notice
 
 proc canfix {nick uhost hand chan arg} {
 	global temp
-	putlog 111
+
 	set temp(chan) $chan
+	set temp(list) ""
 
 	putserv "PRIVMSG C :CANFIX [lindex [split $arg] 0]"
+	
+	set temp(display) [utimer 15 [list putserv "PRIVMSG $temp(chan) ::: Accounts who can issue fixes in channel $temp(chan): [join $temp(list) "\002,\002 "]"]]
 }
 
 proc canfix:notice {nick uhost hand text {dest ""}} {
 	global temp
-	putlog $text
-	if {[string match -nocase "*do not have a hi*" $text]} { putserv "PRIVMSG $temp(chan) :$text" }
-	if {[string match -nocase "*can issue*" $text]} { putserv "PRIVMSG $temp(chan) :$text" }
+
+	set who [lindex [split $text] 0]
+
+	if {[string match -nocase "*do not have a hi*" $text]} { putserv "PRIVMSG $temp(chan) :$text"; return }
+
+	if {[string match -nocase "*--*" $text]} { lappend temp(list) "\00303$who\003" }
+
+	killutimer $temp(display)
+	
+	set temp(display) [utimer 10 [list putserv "PRIVMSG $temp(chan) ::: Accounts who can issue fixes in channel $temp(chan): [join $temp(list) "\002,\002 "]"]]
 }
 
 putlog "++ \[ - \00304PUBLIC\003 - \00306loaded\003 * \00303Canfix\003 \]"
