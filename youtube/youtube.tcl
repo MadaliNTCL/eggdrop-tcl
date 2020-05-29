@@ -45,7 +45,7 @@ package require json
 package require http
 package require tls
 
-set youtube(api) "AIzaSyBampY7KsA-c0Ho__pfT4P2CwDnOB2h_tQ"
+set youtube(api) "AIzaSyBqxx9ReJnALAoj6fZR8X5IiM0BUmzgp_4"
 set youtube(version) "2.0"
 
 setudef flag youtube
@@ -89,7 +89,7 @@ proc ytpubm:youtube {nick uhost hand chan arg} {
 		search {
 			::http::register https 443 [list ::tls::socket -tls1 1]
 
-			if {[catch {http::geturl "https://www.googleapis.com/youtube/v3/search?[http::formatQuery key $youtube(api) maxresults 5 part id,snippet type video order viewCount q [lindex [split $arg] 1]]"} tok]} {
+			if {[catch {http::geturl "https://www.googleapis.com/youtube/v3/videos?[http::formatQuery key $youtube(api) maxresults 5 part id,snippet type video order viewCount q [lindex [split $arg] 1]]"} tok]} {
 				putlog "Socket error: $tok"
 				return 0
 			}
@@ -201,10 +201,9 @@ proc youtube:parse {youtubecheck match youtubeid dest} {
 
 		putlog "HTTP Error: $code"
 		return 0
-	}
+	}	
 
 	set data [http::data $tok]
-
 	set parse [::json::json2dict $data]
 
 	set playtime [lindex [dict get [lindex [dict get $parse items] 0] snippet] 1]
@@ -215,11 +214,12 @@ proc youtube:parse {youtubecheck match youtubeid dest} {
 	set commentCount [lindex [dict get [lindex [dict get $parse items] 0] statistics] 9]
 	set publishedAt [lindex [dict get [lindex [dict get $parse items] 0] snippet] 1]
 	set publishedAt [string map [list "T" " " ".000Z" ""] $publishedAt]
+	set channelTitle [lindex [dict get [lindex [dict get $parse items] 0] snippet] 11]
 	set duration [lindex [dict get [lindex [dict get $parse items] 0] contentDetails] 1]
 	set duration [string map [list "PT" "" "M" "m " "S" "s"] $duration]
 	set definition [string toupper [lindex [dict get [lindex [dict get $parse items] 0] contentDetails] 5]]
 
-	putserv "PRIVMSG $dest :\002\00301,00You\00300,04Tube\002\017 \00312$title\003 \002\00304$definition\003\002 \037\002/\002\037 \00302Views\003: \00303[youtube:convert $viewCount]\003 \037\002/\002\037 \00302Likes\003: \00310[youtube:convert $likeCount]\003 \037\002/\002\037 \00302Dislikes\003: \00304[youtube:convert $dislikeCount]\003 \037\002/\002\037 \00302Comments\003: \00304[youtube:convert $commentCount]\003 \037\002/\002\037 \00302Duration: \00304$duration\003 \037\002/\002\037 \00302Published at: \00304$publishedAt"
+	putserv "PRIVMSG $dest :\002\00301,00You\00300,04Tube\002\017 \00312$title\003 \002\00304$definition\003\002 \037\002/\002\037 \00302Views\003: \00303[youtube:convert $viewCount]\003 \037\002/\002\037 \00302Likes\003: \00310[youtube:convert $likeCount]\003 \037\002/\002\037 \00302Dislikes\003: \00304[youtube:convert $dislikeCount]\003 \037\002/\002\037 \00302Comments\003: \00304[youtube:convert $commentCount]\003 \037\002/\002\037 \00302Duration: \00304$duration\003 \037\002/\002\037 \00302Published at: \00304$publishedAt\003 by \00312$channelTitle"
 }
 
 proc youtube:convert {num} { while {[regsub {^([-+]?\d+)(\d\d\d)} $num "\\1.\\2" num]} {}; return $num }
