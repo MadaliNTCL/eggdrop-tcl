@@ -45,7 +45,7 @@ package require json
 package require http
 package require tls
 
-set youtube(api) "AIzaSyBqxx9ReJnALAoj6fZR8X5IiM0BUmzgp_4"
+set youtube(api) "youtube api key"
 set youtube(version) "2.0"
 
 setudef flag youtube
